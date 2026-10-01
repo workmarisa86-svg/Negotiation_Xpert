@@ -8,6 +8,7 @@ A voice-based negotiation training game that runs entirely in the browser. You s
 - Coach Mode (live feedback and hints) and Challenge Mode (review only at the end)
 - Technique detection for mirroring, labeling, calibrated questions, "no"-oriented questions, accusation audits, summaries / "that's right", and Ackerman bargaining, plus common mistakes
 - Glossary with expandable explanations, a statistics dashboard and professional credentials
+- Installable app (PWA) on computers and phones, with offline support after the first visit and an in-app "New version available — Reload" notice
 - No frameworks, no AI, no server, no external requests. History is saved in `localStorage`.
 
 ## Run locally
@@ -28,10 +29,30 @@ node tests/run-tests.js       # add -v for a per-scenario summary
 
 The tests cover detector cases in both languages and validate every scenario's data. They also simulate full playthroughs of every scenario in English and Spanish: a skilled player must win, while a careless player and a one-technique player (Medium and above) must not.
 
+## Installable app and offline use
+
+- **Install:** an **Install app** button appears in the top bar in Chrome, Edge and other Chromium browsers (desktop and Android). On iPhone/iPad (Safari: Share → Add to Home Screen) and Safari on Mac (File → Add to Dock), the button shows those steps instead. It hides once the app is installed.
+- **Offline:** `sw.js` precaches every file on the first visit, so the app opens and all 50 scenarios, the glossary, statistics and credentials work without internet. Voice *recognition* in Chrome and Edge uses an online service, so offline you type your replies (the app explains this if you press the microphone); spoken counterpart voices usually still work.
+- **Updates:** when you publish changes, open copies of the app download the new version in the background and show **New version available — Reload** (English or Spanish). Nothing changes until the user clicks Reload.
+
+### Publishing an update (bump the version)
+
+Whenever you change any app file, run this before committing:
+
+```bash
+node tools/stamp-sw.js          # 1.1.0 -> 1.1.1  (use "minor" or "major" for bigger releases)
+```
+
+It recomputes a content hash of every precached file, writes it into `sw.js` and bumps `VERSION`. The tests fail if `sw.js` is out of date, and they also fail if a file used by `index.html` is missing from the offline list in `sw.js`. If you add a new file, add it to `ASSETS` in `sw.js`, then run the stamp script.
+
 ## Project structure
 
 ```
 index.html
+manifest.webmanifest     app name, colours and icons for installation
+sw.js                    service worker: offline cache and update flow (VERSION lives here)
+tools/stamp-sw.js        bumps the service-worker version from a content hash
+icons/                   app icons (SVG source and PNG sizes, including maskable and Apple)
 css/styles.css            design system (light and dark themes, responsive)
 js/icons.js               line icons
 js/i18n.js                interface text, coach feedback and coach phrases (EN/ES)
@@ -42,6 +63,7 @@ js/engine.js              the negotiation engine (no DOM)
 js/scenarios/*.js         scenario data, one file per difficulty level
 js/store.js               saved history, statistics aggregation, credentials
 js/speech.js              speech recognition and synthesis
+js/pwa.js                 install button, service-worker registration, update notice
 js/app.js                 views, routing and interaction
 tests/run-tests.js        automated tests
 ```
@@ -80,4 +102,4 @@ Then run `node tests/run-tests.js` to check that the new scenario is complete an
 4. Choose the branch you want to publish (for example `main`) and the **/ (root)** folder, then click **Save**.
 5. Wait a minute or two. The site appears at `https://<your-username>.github.io/<repository-name>/`, and the address is shown at the top of the Pages settings page.
 
-GitHub Pages serves over HTTPS, which browsers require before they allow microphone access. The first time you press the microphone button, allow access when the browser asks.
+GitHub Pages serves over HTTPS, which browsers require before they allow microphone access and before the app can be installed. The first time you press the microphone button, allow access when the browser asks.

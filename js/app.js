@@ -102,6 +102,7 @@
         </a>
         <nav class="nav" aria-label="Main">${navLinks}</nav>
         <div class="top-actions">
+          <button class="btn btn-sm install-btn" type="button" id="installBtn" ${NX.pwa && NX.pwa.canInstall() ? '' : 'hidden'} title="${t('pwa.installTitle')}">${icon('download')}<span>${t('pwa.install')}</span></button>
           <div class="lang-switch" data-lang="${lang()}" role="group" aria-label="${t('lang.toggle')}">
             <span class="thumb"></span>
             <button type="button" data-lang-set="en" aria-pressed="${lang() === 'en'}" lang="en">EN</button>
@@ -112,7 +113,18 @@
       </div></header>
       <main class="main" id="main" tabindex="-1"></main>
       <nav class="tabbar" aria-label="Main">${navLinks}</nav>
-      <div class="toasts" id="toasts" aria-live="polite"></div>`;
+      <div class="toasts" id="toasts" aria-live="polite"></div>
+      <div id="updateSlot"></div>`;
+    renderUpdate();
+  }
+  function renderUpdate() {
+    const slot = $('#updateSlot');
+    if (!slot) return;
+    slot.innerHTML = NX.pwa && NX.pwa.updateReady && !state.updateDismissed
+      ? `<div class="update-bar" role="status">${icon('refresh')}<span>${t('pwa.update')}</span>
+          <button class="btn btn-primary btn-sm" type="button" id="updateBtn">${t('pwa.reload')}</button>
+          <button class="icon-btn update-close" type="button" id="updateLater" aria-label="${t('pwa.later')}" title="${t('pwa.later')}">${icon('x')}</button></div>`
+      : '';
   }
   function markNav(r) {
     document.querySelectorAll('[data-nav]').forEach(a => {
@@ -540,6 +552,7 @@
       onError: code => {
         const it = $('#interim');
         if (code === 'denied') { state.notice = 'play.micDenied'; renderComposer(); }
+        else if (code === 'network') { state.notice = 'play.micOffline'; renderComposer(); }
         else if (code === 'nothing' && it) { it.classList.remove('live'); it.textContent = t('play.micNothing'); }
       },
       onEnd: txt => {
@@ -708,7 +721,7 @@
         <section class="card"><div class="section-title">${t('stats.mistakes')}</div>${mRows}</section>
         <section class="card wide"><div class="section-title">${t('stats.byScenario')}</div>${table}</section>
       </div>
-      <div class="stats-foot"><button class="btn btn-danger" type="button" id="resetBtn">${icon('trash')}${t('stats.reset')}</button></div>
+      <div class="stats-foot"><span class="app-version" id="appVersion">${NX.pwa && NX.pwa.version ? esc(t('pwa.version', { v: NX.pwa.version })) : ''}</span><button class="btn btn-danger" type="button" id="resetBtn">${icon('trash')}${t('stats.reset')}</button></div>
     </div>`;
     bindChart();
   }
@@ -775,6 +788,18 @@
   }
 
   // ---------- modal & toast ----------
+  function infoModal(title, body) {
+    const back = document.createElement('div');
+    back.className = 'modal-back';
+    back.innerHTML = `<div class="card modal" role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="modal-icon">${icon('download')}</div><h3 id="mTitle">${esc(title)}</h3><p>${esc(body)}</p>
+      <div class="modal-actions"><button class="btn btn-primary" type="button" data-m="1">${t('common.ok')}</button></div></div>`;
+    const close = () => { back.remove(); document.removeEventListener('keydown', onKey); };
+    const onKey = e => { if (e.key === 'Escape') close(); };
+    back.addEventListener('click', e => { if (e.target === back || e.target.closest('[data-m]')) close(); });
+    document.addEventListener('keydown', onKey);
+    document.body.appendChild(back);
+    back.querySelector('[data-m]').focus();
+  }
   function confirmModal(title, body, okLabel, danger) {
     return new Promise(resolve => {
       const back = document.createElement('div');
@@ -833,6 +858,15 @@
       return;
     }
     if (tgt.closest('#randomBtn')) return randomPick();
+    if (tgt.closest('#installBtn')) {
+      const res = await NX.pwa.promptInstall();
+      if (res === 'ios') infoModal(t('pwa.installTitle'), t('pwa.iosSteps'));
+      else if (res === 'mac') infoModal(t('pwa.installTitle'), t('pwa.macSteps'));
+      const b = $('#installBtn'); if (b) b.hidden = !NX.pwa.canInstall();
+      return;
+    }
+    if (tgt.closest('#updateBtn')) { NX.pwa.applyUpdate(); return; }
+    if (tgt.closest('#updateLater')) { state.updateDismissed = true; renderUpdate(); return; }
     const open = tgt.closest('[data-open]');
     if (open) return go('#/brief/' + open.dataset.open);
     if (tgt.closest('#beginBtn')) return begin();
@@ -942,6 +976,14 @@
   document.addEventListener('contextmenu', e => { if (e.target.closest && e.target.closest('#micBtn')) e.preventDefault(); });
   if (mq && mq.addEventListener) mq.addEventListener('change', () => { if (!S.theme) { applyTheme(); const b = $('#themeBtn'); if (b) b.innerHTML = icon(effectiveTheme() === 'dark' ? 'sun' : 'moon'); } });
   window.addEventListener('hashchange', route);
+
+  // ---------- installable app ----------
+  if (NX.pwa) NX.pwa.on(type => {
+    if (type === 'install') { const b = $('#installBtn'); if (b) b.hidden = !NX.pwa.canInstall(); }
+    else if (type === 'update') { state.updateDismissed = false; renderUpdate(); }
+    else if (type === 'offline-ready') toast('check', t('app.name'), t('pwa.offlineReady'));
+    else if (type === 'version') { const v = $('#appVersion'); if (v) v.textContent = t('pwa.version', { v: NX.pwa.version }); }
+  });
 
   // ---------- boot ----------
   i18n.lang = S.lang || ((navigator.language || 'en').toLowerCase().startsWith('es') ? 'es' : 'en');

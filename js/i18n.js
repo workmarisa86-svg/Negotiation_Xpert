@@ -109,7 +109,13 @@
 
     'ach.title': 'Credentials', 'ach.sub': 'Professional milestones earned through practice.', 'ach.earned': 'Earned {date}', 'ach.locked': 'Not yet earned',
     'ach.id': 'Credential no.', 'ach.progress': '{n} of {total} earned', 'toast.ach': 'Credential earned', 'toast.many': '{n} new credentials. See your review.', 'stats.noMistakes': 'No mistakes recorded. Well done.',
-    'common.close': 'Close', 'common.of': 'of'
+    'common.close': 'Close', 'common.of': 'of', 'common.ok': 'Got it',
+    'pwa.install': 'Install app', 'pwa.installTitle': 'Install Negotiation Xpert',
+    'pwa.iosSteps': 'On iPhone or iPad, open this page in Safari, tap the Share button, then choose “Add to Home Screen”. The app will open full screen and work offline.',
+    'pwa.macSteps': 'In Safari on Mac, choose File → Add to Dock. The app will open in its own window and work offline.',
+    'pwa.update': 'New version available', 'pwa.reload': 'Reload', 'pwa.later': 'Later',
+    'pwa.offlineReady': 'Ready to work offline.', 'pwa.version': 'Version {v}',
+    'play.micOffline': 'Voice recognition in this browser needs an internet connection. While offline, type your replies; everything else works normally.'
   };
 
   const es = {
@@ -216,7 +222,13 @@
 
     'ach.title': 'Credenciales', 'ach.sub': 'Hitos profesionales obtenidos con la práctica.', 'ach.earned': 'Obtenida el {date}', 'ach.locked': 'Aún no obtenida',
     'ach.id': 'Credencial n.º', 'ach.progress': '{n} de {total} obtenidas', 'toast.ach': 'Credencial obtenida', 'toast.many': '{n} credenciales nuevas. Consulta tu revisión.', 'stats.noMistakes': 'Sin errores registrados. Bien hecho.',
-    'common.close': 'Cerrar', 'common.of': 'de'
+    'common.close': 'Cerrar', 'common.of': 'de', 'common.ok': 'Entendido',
+    'pwa.install': 'Instalar app', 'pwa.installTitle': 'Instalar Negotiation Xpert',
+    'pwa.iosSteps': 'En iPhone o iPad, abre esta página en Safari, toca el botón Compartir y elige «Añadir a pantalla de inicio». La app se abrirá a pantalla completa y funcionará sin conexión.',
+    'pwa.macSteps': 'En Safari para Mac, elige Archivo → Añadir al Dock. La app se abrirá en su propia ventana y funcionará sin conexión.',
+    'pwa.update': 'Nueva versión disponible', 'pwa.reload': 'Recargar', 'pwa.later': 'Más tarde',
+    'pwa.offlineReady': 'Lista para usar sin conexión.', 'pwa.version': 'Versión {v}',
+    'play.micOffline': 'El reconocimiento de voz de este navegador necesita conexión a internet. Sin conexión, escribe tus respuestas; todo lo demás funciona con normalidad.'
   };
 
   // Coach feedback notes (keys produced by the engine)

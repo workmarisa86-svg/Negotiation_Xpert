@@ -231,6 +231,33 @@ S.forEach(sc => {
   });
 });
 
+// ---------- 4. installable app (PWA) ----------
+const rootDir = path.join(__dirname, '..');
+const stamp = require(path.join(rootDir, 'tools', 'stamp-sw.js'));
+const swSrc = fs.readFileSync(stamp.swPath, 'utf8');
+const assets = stamp.assetsOf(swSrc);
+const html = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8');
+test('every precached file exists', () => assets.filter(a => a !== './').forEach(a => assert(fs.existsSync(path.join(rootDir, a)), 'missing ' + a)));
+test('every local file used by index.html is precached for offline use', () => {
+  const refs = (html.match(/(?:src|href)="([^"#:]+)"/g) || []).map(m => './' + m.split('"')[1]);
+  refs.forEach(r => assert(assets.includes(r), r + ' is not in sw.js ASSETS'));
+});
+test('manifest is valid and its icons are precached', () => {
+  const m = JSON.parse(fs.readFileSync(path.join(rootDir, 'manifest.webmanifest'), 'utf8'));
+  ['name', 'short_name', 'start_url', 'display', 'icons'].forEach(k => assert(m[k], 'manifest.' + k));
+  assert(m.icons.some(i => i.sizes === '192x192') && m.icons.some(i => i.sizes === '512x512') && m.icons.some(i => i.purpose === 'maskable'), 'icon sizes');
+  m.icons.forEach(i => assert(assets.includes('./' + i.src), i.src + ' not precached'));
+});
+test('sw.js VERSION was bumped for the current files (run: node tools/stamp-sw.js)', () => {
+  const cur = stamp.current(swSrc);
+  assert.strictEqual(cur.build, stamp.computeBuild(swSrc), 'sw.js is stale: run node tools/stamp-sw.js');
+});
+test('every interface string exists in English and Spanish', () => {
+  const { en, es } = NX.i18n.dict;
+  Object.keys(en).forEach(k => assert(es[k] !== undefined, 'missing es: ' + k));
+  Object.keys(es).forEach(k => assert(en[k] !== undefined, 'missing en: ' + k));
+});
+
 if (process.argv.includes('-v')) summary.forEach(r => console.log(r.join('\t')));
 console.log(`\n${pass} passed, ${fail} failed  (${S.length} scenarios)`);
 process.exit(fail ? 1 : 0);
