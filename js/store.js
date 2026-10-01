@@ -3,7 +3,20 @@
   'use strict';
   const NX = root.NX = root.NX || {};
   const L = (en, es) => ({ en, es });
-  const KEY = { settings: 'nx.settings.v1', history: 'nx.history.v1', ach: 'nx.achievements.v1' };
+  // Every key is prefixed "negotiation-": the github.io origin (and its localStorage) is shared with other apps.
+  const KEY = { settings: 'negotiation-settings', history: 'negotiation-history', ach: 'negotiation-achievements' };
+  const LEGACY = { settings: 'nx.settings.v1', history: 'nx.history.v1', ach: 'nx.achievements.v1' };
+
+  // One-time move of data saved by versions up to 1.1.0 under the old key names.
+  try {
+    Object.keys(KEY).forEach(k => {
+      const old = localStorage.getItem(LEGACY[k]);
+      if (old !== null) {
+        if (localStorage.getItem(KEY[k]) === null) localStorage.setItem(KEY[k], old);
+        localStorage.removeItem(LEGACY[k]);
+      }
+    });
+  } catch (e) { /* storage unavailable */ }
 
   function read(k, fallback) {
     try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; }
