@@ -617,8 +617,8 @@
       }
     }
 
-    function spot(guess) {
-      const q = st.quiz || (lastThem() && lastThem().quiz);
+    function spot(guess, quiz) {
+      const q = quiz || st.quiz || (lastThem() && lastThem().quiz);
       if (!q || q.answered) return null;
       q.answered = true;
       q.guess = guess;
@@ -709,6 +709,7 @@
 
     return {
       scenario: sc, state: st, start, say, hint, spot, finish, snapshot,
+      setMode: m => { opts.mode = m; }, get mode() { return opts.mode; },
       render: (entry, lang) => renderLine(entry, lang, sc)
     };
   }

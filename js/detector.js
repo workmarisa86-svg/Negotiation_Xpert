@@ -292,6 +292,8 @@
     const whyHit = clauses.some(c => /^(why|por que)\b/.test(c)) || / why (did|do|would|are|is|won't|can't|not) /.test(f) || / por que (no|lo|me|te|nos|esta|es|hay) /.test(f);
     if (whyHit && !tech.includes('noOriented')) mistakes.push('why');
     if (has(f, P.split)) mistakes.push('split');
+    // a single shared word inside another technique is coincidence, not a mirror
+    if (mirror && tech.length > 1 && (mirror.words.length < 2 || words(text).length > 6)) { tech.splice(tech.indexOf('mirroring'), 1); delete meta.mirror; }
     if (tech.includes('summary') && !strongCal) tech.splice(tech.indexOf('calibrated') >>> 0, tech.includes('calibrated') ? 1 : 0);
     const aggr = has(f, P.aggressive.map(a => ' ' + a + ' ')) || has(f, P.aggressive.filter(a => a.indexOf(' ') !== -1));
     const shouting = /[A-Z]{5,}/.test(text.replace(/[^A-Za-z ]/g, '')) && text === text.toUpperCase();

@@ -62,6 +62,8 @@
     'play.thatsRight': 'Breakthrough: “That’s right”', 'play.reveal': 'Hidden information revealed', 'play.milestone': 'Progress',
     'play.better': 'Try instead', 'play.next': 'Next move', 'play.challengeNote': 'Challenge Mode: coaching is hidden until the final review.',
     'play.you': 'You', 'play.hintTitle': 'Coach’s hint', 'play.status': 'Status', 'play.conversation': 'Conversation',
+    'play.complete': 'Negotiation complete.', 'play.viewReview': 'View review', 'play.tapStop': 'Listening… tap the microphone again to send',
+    'play.spaceHint': 'Hold the microphone (or the space bar) and speak. Tap once for hands-free.',
     'play.detected': 'Detected', 'play.nothing': 'No technique', 'play.useHint': 'Use this phrase',
 
     'rating.excellent': 'Excellent', 'rating.strong': 'Strong', 'rating.good': 'Good', 'rating.weak': 'Weak', 'rating.mistake': 'Mistake',
@@ -106,7 +108,7 @@
     'stats.score': 'Score', 'stats.session': 'Session', 'stats.wonOf': '{w} of {n} won', 'stats.noData': 'No sessions', 'stats.moving': '5-session average',
 
     'ach.title': 'Credentials', 'ach.sub': 'Professional milestones earned through practice.', 'ach.earned': 'Earned {date}', 'ach.locked': 'Not yet earned',
-    'ach.id': 'Credential no.', 'ach.progress': '{n} of {total} earned', 'toast.ach': 'Credential earned',
+    'ach.id': 'Credential no.', 'ach.progress': '{n} of {total} earned', 'toast.ach': 'Credential earned', 'toast.many': '{n} new credentials. See your review.', 'stats.noMistakes': 'No mistakes recorded. Well done.',
     'common.close': 'Close', 'common.of': 'of'
   };
 
@@ -167,6 +169,8 @@
     'play.thatsRight': 'Punto de quiebre: «Así es»', 'play.reveal': 'Información oculta revelada', 'play.milestone': 'Avance',
     'play.better': 'Prueba con', 'play.next': 'Siguiente paso', 'play.challengeNote': 'Modo Desafío: el coaching se muestra solo en la revisión final.',
     'play.you': 'Tú', 'play.hintTitle': 'Pista de tu coach', 'play.status': 'Estado', 'play.conversation': 'Conversación',
+    'play.complete': 'Negociación terminada.', 'play.viewReview': 'Ver revisión', 'play.tapStop': 'Escuchando… toca el micrófono otra vez para enviar',
+    'play.spaceHint': 'Mantén pulsado el micrófono (o la barra espaciadora) y habla. Tócalo una vez para manos libres.',
     'play.detected': 'Detectado', 'play.nothing': 'Sin técnica', 'play.useHint': 'Usar esta frase',
 
     'rating.excellent': 'Excelente', 'rating.strong': 'Sólido', 'rating.good': 'Bien', 'rating.weak': 'Débil', 'rating.mistake': 'Error',
@@ -211,7 +215,7 @@
     'stats.score': 'Puntuación', 'stats.session': 'Sesión', 'stats.wonOf': '{w} de {n} ganadas', 'stats.noData': 'Sin sesiones', 'stats.moving': 'Media de 5 sesiones',
 
     'ach.title': 'Credenciales', 'ach.sub': 'Hitos profesionales obtenidos con la práctica.', 'ach.earned': 'Obtenida el {date}', 'ach.locked': 'Aún no obtenida',
-    'ach.id': 'Credencial n.º', 'ach.progress': '{n} de {total} obtenidas', 'toast.ach': 'Credencial obtenida',
+    'ach.id': 'Credencial n.º', 'ach.progress': '{n} de {total} obtenidas', 'toast.ach': 'Credencial obtenida', 'toast.many': '{n} credenciales nuevas. Consulta tu revisión.', 'stats.noMistakes': 'Sin errores registrados. Bien hecho.',
     'common.close': 'Cerrar', 'common.of': 'de'
   };
 
