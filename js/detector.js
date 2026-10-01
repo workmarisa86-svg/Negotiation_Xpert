@@ -259,8 +259,8 @@
   /* ctx: { lang, prevLine (counterpart's last line, same language), unit ('usd'|'time'|...) } */
   function analyze(text, ctx) {
     ctx = ctx || {};
-    const f = ' ' + fold(text).replace(/[^a-z0-9'ñ\s:.,%$-]/g, ' ').replace(/\s+/g, ' ').trim() + ' ';
-    const t = f.trim();
+    const t = fold(text).replace(/[^a-z0-9'ñ\s:.,%$?!;-]/g, ' ').replace(/\s+/g, ' ').trim();
+    const f = ' ' + words(text).join(' ') + ' ';
     const wc = words(text).length;
     const tech = [];
     const mistakes = [];

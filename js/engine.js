@@ -189,7 +189,8 @@
       if (sc.type !== 'deal') return null;
       const lo = Math.min(sc.start, sc.target), hi = Math.max(sc.start, sc.target);
       const span = Math.max(hi - lo, sc.step || 1);
-      return [Math.max(0, lo - span * 1.6), hi + span * 1.6];
+      const pad = Math.max(span * 1.6, Math.abs(sc.target) * 0.45);
+      return [Math.max(0, lo - pad), hi + pad];
     }
 
     // ----- Ackerman tracking -----
@@ -527,6 +528,10 @@
             return closeDeal(x, out);
           }
           st.cpF = st.cpF + (offerF - st.cpF) * 0.55;
+          if (Math.abs(cpValue() - x) < (sc.step || 1) * 0.75) {
+            out.push(themLine(pick('accept'), { price: x }));
+            return closeDeal(x, out);
+          }
           out.push(themLine(pick('counter'), { price: cpValue() }));
           return;
         }

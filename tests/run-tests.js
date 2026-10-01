@@ -175,6 +175,9 @@ function goodBot(sc, lang, seed) {
     res = g.say(line, lang);
     i++;
   }
+  if (process.env.TRACE === sc.id + ':' + lang + ':' + seed) {
+    g.state.transcript.forEach(e => console.log(e.who === 'me' ? 'ME: ' + e.text + '  [' + e.coach.rating + ' ' + e.coach.tech + ' ' + e.coach.mistakes + ']' : '   ' + (e.tactic ? '(' + e.tactic + ') ' : '') + g.render(e, lang)));
+  }
   return g.state.result;
 }
 const BAD = {
