@@ -252,6 +252,36 @@ test('sw.js VERSION was bumped for the current files (run: node tools/stamp-sw.j
   const cur = stamp.current(swSrc);
   assert.strictEqual(cur.build, stamp.computeBuild(swSrc), 'sw.js is stale: run node tools/stamp-sw.js');
 });
+// ---------- 5. isolation from other apps on the same github.io origin ----------
+const APP_PATH = '/Negotiation_Xpert/';
+test('manifest id, start_url and scope are limited to /Negotiation_Xpert/', () => {
+  const m = JSON.parse(fs.readFileSync(path.join(rootDir, 'manifest.webmanifest'), 'utf8'));
+  ['id', 'start_url', 'scope'].forEach(k => assert(m[k].startsWith(APP_PATH), `manifest.${k} = ${m[k]}`));
+  assert.strictEqual(m.scope, APP_PATH);
+  (m.shortcuts || []).forEach(sh => assert(sh.url.startsWith(APP_PATH), 'shortcut ' + sh.url));
+});
+test('service worker is pinned to /Negotiation_Xpert/ and ignores requests outside it', () => {
+  assert(swSrc.includes("const APP_PATH = '/Negotiation_Xpert/'"), 'APP_PATH');
+  assert(/if \(!inScope\(url\)\) return;/.test(swSrc), 'fetch handler must skip out-of-scope URLs');
+  assert(/if \(!SCOPE_OK\b/.test(swSrc), 'worker must refuse to run under a wrong scope');
+  assert(!/caches\.match\(/.test(swSrc), 'use the app\'s own cache, never the origin-wide caches.match');
+});
+test('page registers the worker with an explicit /Negotiation_Xpert/ scope', () => {
+  const pwa = fs.readFileSync(path.join(rootDir, 'js', 'pwa.js'), 'utf8');
+  assert(/register\(APP_PATH \+ 'sw\.js', \{ scope: APP_PATH \}\)/.test(pwa), 'explicit scope');
+  assert(pwa.includes("const APP_PATH = '/Negotiation_Xpert/'"), 'APP_PATH');
+});
+test('all saved data and cache names are prefixed "negotiation-"', () => {
+  assert(swSrc.includes("const CACHE_PREFIX = 'negotiation-'") && /const CACHE = CACHE_PREFIX/.test(swSrc), 'cache prefix');
+  const files = ['js/store.js', 'js/app.js', 'js/pwa.js', 'js/speech.js', 'index.html'].map(f => [f, fs.readFileSync(path.join(rootDir, f), 'utf8')]);
+  files.forEach(([f, src]) => {
+    (src.match(/(?:localStorage|sessionStorage)\.(?:setItem)\(\s*'([^']+)'/g) || []).forEach(m => assert(m.includes("'negotiation-"), f + ': ' + m));
+    assert(!/indexedDB/.test(src), f + ' uses indexedDB');
+  });
+  const store = files.find(f => f[0] === 'js/store.js')[1];
+  (store.match(/const KEY = \{[^}]+\}/)[0].match(/'[^']+'/g)).forEach(k => assert(k.startsWith("'negotiation-"), 'store key ' + k));
+});
+
 test('every interface string exists in English and Spanish', () => {
   const { en, es } = NX.i18n.dict;
   Object.keys(en).forEach(k => assert(es[k] !== undefined, 'missing es: ' + k));

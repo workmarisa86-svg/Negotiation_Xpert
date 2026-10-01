@@ -55,15 +55,47 @@
     worker.postMessage('GET_VERSION', [ch.port2]);
   }
 
+  // This app lives at /Negotiation_Xpert/ on a github.io origin shared with other apps.
+  const APP_PATH = '/Negotiation_Xpert/';
+  const SW_MARKER = 'Negotiation Xpert — service worker';
+  const LEGACY_CACHE = /^nx-\d+\.\d+\.\d+-[0-9a-f]{8}$/;
+
+  // Removes Negotiation Xpert service workers registered with any scope other than APP_PATH
+  // (e.g. from an older deployment at the site root) and caches from versions up to 1.1.0.
+  // Other apps' service workers are identified by their script contents and left untouched.
+  async function cleanupLegacy() {
+    try {
+      const regs = await nav.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(async reg => {
+        if (new URL(reg.scope).pathname === APP_PATH) return;
+        const w = reg.active || reg.waiting || reg.installing;
+        if (!w) return;
+        try {
+          const res = await fetch(w.scriptURL, { cache: 'no-store' });
+          if (res.ok && (await res.text()).includes(SW_MARKER)) await reg.unregister();
+        } catch (e) { /* cannot read the script: leave it alone */ }
+      }));
+    } catch (e) { /* registrations unavailable */ }
+    try {
+      if (root.caches) {
+        const keys = await root.caches.keys();
+        await Promise.all(keys.filter(k => LEGACY_CACHE.test(k)).map(k => root.caches.delete(k)));
+      }
+    } catch (e) { /* cache storage unavailable */ }
+  }
+
   function register() {
     if (!('serviceWorker' in nav) || root.location.protocol === 'file:') return;
+    cleanupLegacy();
+    // Only register when served from /Negotiation_Xpert/, so the worker can never claim a wider scope.
+    if (!root.location.pathname.startsWith(APP_PATH)) return;
     const firstInstall = !nav.serviceWorker.controller;
     nav.serviceWorker.addEventListener('controllerchange', () => {
       if (reloading) { root.location.reload(); return; }
       if (firstInstall) emit('offline-ready');
       askVersion(nav.serviceWorker.controller);
     });
-    nav.serviceWorker.register('./sw.js').then(reg => {
+    nav.serviceWorker.register(APP_PATH + 'sw.js', { scope: APP_PATH }).then(reg => {
       state.reg = reg;
       if (reg.waiting && nav.serviceWorker.controller) markUpdate();
       track(reg.installing);

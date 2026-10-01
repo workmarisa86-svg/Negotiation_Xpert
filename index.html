@@ -17,7 +17,7 @@
   <meta name="application-name" content="Negotiation Xpert">
   <script>
     /* apply the saved theme before first paint to avoid a flash */
-    try { var s = JSON.parse(localStorage.getItem('nx.settings.v1') || '{}'); if (s.theme) document.documentElement.setAttribute('data-theme', s.theme); if (s.lang) document.documentElement.lang = s.lang; } catch (e) {}
+    try { var s = JSON.parse(localStorage.getItem('negotiation-settings') || localStorage.getItem('nx.settings.v1') || '{}'); if (s.theme) document.documentElement.setAttribute('data-theme', s.theme); if (s.lang) document.documentElement.lang = s.lang; } catch (e) {}
   </script>
   <link rel="stylesheet" href="css/styles.css">
 </head>

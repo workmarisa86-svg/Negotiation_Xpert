@@ -1,10 +1,10 @@
 {
-  "id": "./",
+  "id": "/Negotiation_Xpert/",
   "name": "Negotiation Xpert · Executive negotiation training",
   "short_name": "Negotiation Xpert",
   "description": "Voice-based negotiation training with a professional coach. English and Spanish. Works offline.",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/Negotiation_Xpert/",
+  "scope": "/Negotiation_Xpert/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#0A1120",
@@ -19,8 +19,8 @@
     { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
-    { "name": "Scenarios", "short_name": "Scenarios", "url": "./#/", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Glossary", "short_name": "Glossary", "url": "./#/glossary", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Statistics", "short_name": "Statistics", "url": "./#/stats", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+    { "name": "Scenarios", "short_name": "Scenarios", "url": "/Negotiation_Xpert/#/", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Glossary", "short_name": "Glossary", "url": "/Negotiation_Xpert/#/glossary", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Statistics", "short_name": "Statistics", "url": "/Negotiation_Xpert/#/stats", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
   ]
 }

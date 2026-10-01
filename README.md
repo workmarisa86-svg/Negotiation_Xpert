@@ -35,6 +35,15 @@ The tests cover detector cases in both languages and validate every scenario's d
 - **Offline:** `sw.js` precaches every file on the first visit, so the app opens and all 50 scenarios, the glossary, statistics and credentials work without internet. Voice *recognition* in Chrome and Edge uses an online service, so offline you type your replies (the app explains this if you press the microphone); spoken counterpart voices usually still work.
 - **Updates:** when you publish changes, open copies of the app download the new version in the background and show **New version available — Reload** (English or Spanish). Nothing changes until the user clicks Reload.
 
+### Sharing the github.io domain with other apps
+
+All your GitHub Pages projects share one origin (`workmarisa86-svg.github.io`), and with it service workers, caches and `localStorage`. To stay isolated, this app:
+
+- registers its service worker only from `/Negotiation_Xpert/`, with the explicit scope `/Negotiation_Xpert/`, and the worker ignores every request outside that folder (it unregisters itself if it ever finds a different scope);
+- uses `/Negotiation_Xpert/` for the manifest's `id`, `start_url` and `scope`;
+- names everything it stores with the `negotiation-` prefix (`negotiation-settings`, `negotiation-history`, `negotiation-achievements`, and caches `negotiation-<version>-<build>`);
+- on start, removes any older Negotiation Xpert service worker registered with another scope (recognised by its script, so other apps' workers are never touched), deletes caches from versions up to 1.1.0, and moves data saved under the old `nx.*` keys to the new names.
+
 ### Publishing an update (bump the version)
 
 Whenever you change any app file, run this before committing:
