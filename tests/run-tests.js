@@ -193,6 +193,20 @@ function badBot(sc, lang) {
   return g.state.result;
 }
 
+// A player who only ever uses one technique should not beat Medium or above.
+function oneTrickBot(sc, lang) {
+  const g = NX.engine.create(sc, { lang, rng: seeded(3) });
+  g.start();
+  const lab = P[lang].label;
+  let i = 0;
+  while (!g.state.ended && i < 40) {
+    let line = lab[i % 3];
+    if (i >= 9 && sc.type === 'deal') line = i === 9 ? P[lang].ack(sc.unit === 'time' ? timeStr(sc.target) : numStr(sc.target, lang)) : P[lang].accept;
+    g.say(line, lang); i++;
+  }
+  if (!g.state.ended) g.finish();
+  return g.state.result;
+}
 const summary = [];
 S.forEach(sc => {
   ['en', 'es'].forEach(lang => {
@@ -205,6 +219,10 @@ S.forEach(sc => {
     test(`skilled player wins randomized: ${sc.id} [${lang}]`, () => {
       const r = goodBot(sc, lang, 99);
       assert(r.won, `outcome=${r.outcome} f=${r.f.toFixed(2)} score=${r.score}`);
+    });
+    if (LV.indexOf(sc.level) >= 2) test(`one-trick player does not win: ${sc.id} [${lang}]`, () => {
+      const r = oneTrickBot(sc, lang);
+      assert(!r.won, `outcome=${r.outcome} f=${r.f.toFixed(2)} score=${r.score}`);
     });
     test(`careless player does not win: ${sc.id} [${lang}]`, () => {
       const r = badBot(sc, lang);

@@ -459,6 +459,10 @@
       else resolveStep(a, ctx, out);
 
       // --- crisis / patience failure ---
+      if (!st.ended && sc.noPay && (st.used.x_pay || 0) >= 2) {
+        out.push(themLine(sc.fail || pick('leave'), {}, { end: true }));
+        endGame('failed');
+      }
       if (!st.ended && st.tension >= 100) {
         out.push(themLine(sc.fail || pick('leave'), {}, { end: true }));
         endGame(sc.type === 'deal' ? 'nodeal' : 'failed');

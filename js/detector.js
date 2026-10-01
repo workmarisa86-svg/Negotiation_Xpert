@@ -101,10 +101,10 @@
     aggressive: [
       'ridiculous', 'stupid', 'idiot', 'rip off', 'ripoff', 'rip-off', 'take it or leave it', 'shut up', 'you must', 'are you crazy', 'insane',
       'liar', 'you\'re lying', 'you are lying', 'pathetic', 'nonsense', 'i demand', 'or else', 'robbery', 'thief', 'cheat', 'damn', 'hell',
-      'useless', 'incompetent', 'dumb', 'last warning', 'i don\'t care',
+      'useless', 'incompetent', 'dumb', 'last warning', 'i don\'t care', 'calm down', 'give up', 'no chance', 'you will regret', 'shut it',
       'ridiculo', 'estupido', 'idiota', 'tomalo o dejalo', 'tomelo o dejelo', 'callate', 'callese', 'estas loco', 'esta loco',
       'es una broma', 'mentiroso', 'mientes', 'miente', 'patetico', 'tonterias', 'exijo', 'o si no', 'ladron', 'robo', 'tramposo',
-      'inutil', 'incompetente', 'me da igual', 'ultima advertencia', 'absurdo'
+      'inutil', 'incompetente', 'me da igual', 'ultima advertencia', 'absurdo', 'calmate', 'calmese', 'tranquilizate', 'rindete', 'rindase', 'no tienes opcion', 'no tienes salida', 'te vas a arrepentir'
     ],
     accept: [
       'deal', 'it\'s a deal', 'agreed', 'i accept', 'i\'ll take it', 'i will take it', 'let\'s do it', 'sounds good', 'you got a deal', 'that works', 'yes',
@@ -259,7 +259,7 @@
   /* ctx: { lang, prevLine (counterpart's last line, same language), unit ('usd'|'time'|...) } */
   function analyze(text, ctx) {
     ctx = ctx || {};
-    const t = fold(text).replace(/[^a-z0-9'ñ\s:.,%$?!;-]/g, ' ').replace(/\s+/g, ' ').trim();
+    const t = fold(String(text).replace(/[¿¡]/g, '. ')).replace(/[^a-z0-9'ñ\s:.,%$?!;-]/g, ' ').replace(/\s+/g, ' ').trim();
     const f = ' ' + words(text).join(' ') + ' ';
     const wc = words(text).length;
     const tech = [];
@@ -276,8 +276,9 @@
     if (has(f, P.summary)) tech.push('summary');
 
     // calibrated questions: open how/what questions (anywhere at clause start)
-    const strongCal = has(f, P.calibratedStrong);
     const clauses = t.split(/[.?!;,]|\bbut\b|\bpero\b|\band\b|\by\b|\bso\b|\bentonces\b/).map(s => s.trim()).filter(Boolean);
+    // English how/what phrases are unambiguous anywhere; Spanish que/como only open a question at clause start
+    const strongCal = clauses.some(c => P.calibratedStrong.some(p => c.startsWith(p) || (/^(how|what)\b/.test(p) && c.indexOf(' ' + p) !== -1)));
     const calStart = clauses.some(c => startsWithAny(c + ' ', P.calibratedStart) && !startsWithAny(c, ['what if i', 'que si', 'what a ', 'que bien', 'que pena', 'que lastima', 'how about', 'what about', 'que tal', 'what i am hearing', 'what i hear', 'lo que']));
     if (strongCal) { tech.push('calibrated'); meta.calStrong = true; }
     else if (calStart) {
