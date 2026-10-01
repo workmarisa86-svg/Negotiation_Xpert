@@ -373,7 +373,7 @@
           const rel = stepV / base;
           const ackStep = ctx.ack && ctx.ack.step > 1;
           if (!ackStep && (rel > 0.25 || (gapV > 0 && stepV > 0.6 * gapV && rel > 0.08))) a.mistakes.push('raiseFast');
-          if (afterTactic && rel > 0.1 && !a.mistakes.includes('raiseFast')) a.mistakes.push('caved');
+          if (afterTactic && rel > 0.1 && !ackStep && !a.mistakes.includes('raiseFast')) a.mistakes.push('caved');
         } else if (offerF <= st.cpF + 1e-9 && st.turn <= 3) {
           a.mistakes.push('yesFast');
         }

@@ -345,19 +345,19 @@
       crisis: [L('{price}. No more talking. Yes or no.', '{price}. No hay más que hablar. Sí o no.')]
     },
     anchoring: {
-      biz: [L('Honestly, similar deals have gone for far more than {price}. I\'m being generous.', 'Sinceramente, acuerdos similares se han cerrado muy por encima de {price}. Estoy siendo generoso.')],
-      crisis: [L('Others have paid triple. {price} is a gift.', 'Otros han pagado el triple. {price} es un regalo.')]
+      biz: [L('Honestly, {price} is already a very strong number compared to similar deals. I\'m being generous.', 'Sinceramente, {price} ya es una cifra muy buena comparada con acuerdos similares. Estoy siendo generoso.')],
+      crisis: [L('Others have paid far more. {price} is a gift.', 'Otros han pagado mucho más. {price} es un regalo.')]
     },
     higherAuthority: {
-      biz: [L('I\'d have to run anything lower past my partner, and they won\'t like it.', 'Cualquier cosa por debajo tendría que consultarla con mi socio, y no le va a gustar.')],
+      biz: [L('Anything beyond this I\'d have to run past the people above me, and they won\'t like it.', 'Cualquier cosa más allá de esto tendría que consultarla con mis superiores, y no les va a gustar.')],
       crisis: [L('It\'s not up to me. The others decide. And they\'re not patient.', 'No depende de mí. Los otros deciden. Y no son pacientes.')]
     },
     flinch: {
-      biz: [L('Ooh. Wow. That number genuinely hurts to hear.', 'Uf. Vaya. Esa cifra de verdad duele oírla.')],
+      biz: [L('Ooh. Wow. Your number genuinely hurts to hear.', 'Uf. Vaya. Tu cifra de verdad duele oírla.')],
       crisis: [L('What? Are you serious? That\'s nothing!', '¿Qué? ¿Hablas en serio? ¡Eso no es nada!')]
     },
     nibble: {
-      biz: [L('And of course, you\'d cover the extra fees on top of that, right?', 'Y por supuesto, tú cubrirías los costos extra encima de eso, ¿verdad?')],
+      biz: [L('And of course, a few extras would be included at that number, right?', 'Y por supuesto, a esa cifra se incluirían algunos extras, ¿verdad?')],
       crisis: [L('And you\'ll add something extra for the trouble.', 'Y añadirás algo extra por las molestias.')]
     },
     goodCopBadCop: {
@@ -379,7 +379,7 @@
       crisis: [L('You probably think I\'m a monster. I\'m not.', 'Probablemente pienses que soy un monstruo. No lo soy.')]
     },
     fakeDeadline: {
-      biz: [L('My offer expires at five o\'clock sharp. There\'s another buyer waiting.', 'Mi oferta vence a las cinco en punto. Hay otro comprador esperando.')],
+      biz: [L('This offer expires at five o\'clock sharp. Someone else is waiting for my call.', 'Esta oferta vence a las cinco en punto. Hay alguien más esperando mi llamada.')],
       crisis: [L('In five minutes the price doubles.', 'En cinco minutos el precio se duplica.')]
     }
   };
